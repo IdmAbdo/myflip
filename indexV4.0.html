@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flipbook PDF V0.5</title>
+
+  <!-- Favicon (optionnel) -->
+  <link rel="icon" href="favicon.ico" />
+
+  <!-- Styles DFlip -->
+  <link href="libs/dflip.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    #pdf-select {
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #flipbook-container {
+      width: 100%;
+      height: 80vh;
+      border: 1px solid #ccc;
+      background: white;
+    }
+    #fullscreen-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+      border-radius: 4px;
+    }
+    #fullscreen-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <!-- Librairies JS -->
+  <script src="libs/jquery.min.js"></script>
+
+  <!-- ✅ Utiliser la version stable de THREE.js depuis CDN -->
+  <script src="libs/three.min.js"></script>
+
+  <!-- Script principal DFlip -->
+  <script src="libs/dflip.min.js"></script>
+</head>
+
+<body>
+
+  <select id="pdf-select">
+    <option value="pdf/livre01.pdf">Livre 1</option>
+    <option value="pdf/livre02.pdf">Livre 2</option>
+    <option value="pdf/livre03.pdf">Livre 3</option>
+    <option value="pdf/livre04.pdf">Livre 4</option>
+  </select>
+
+  <button id="fullscreen-btn">Plein écran</button>
+
+  <div id="flipbook-container">
+    <div class="_df_book" id="flipbook"></div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      function loadFlipbook(src) {
+        if (!src) {
+          console.error("Aucun PDF sélectionné");
+          return;
+        }
+
+        $("#flipbook").empty();
+
+        const options = {
+          source: src,
+          webgl: true,
+          pageMode: DFLIP.PAGE_MODE.AUTO,
+          singlePageMode: DFLIP.SINGLE_PAGE_MODE.AUTO,
+          zoomRatio: 1.5,
+          scrollWheel: true,
+          showDownloadControl: true,
+          showPrintControl: true,
+          showSearchControl: true,
+          duration: 600
+        };
+
+        $("#flipbook").flipBook(options);
+      }
+
+      // Chargement initial
+      loadFlipbook($('#pdf-select').val());
+
+      // Changement de PDF
+      $('#pdf-select').on('change', function () {
+        const selectedPDF = $(this).val();
+        loadFlipbook(selectedPDF);
+      });
+
+      // Bouton plein écran
+      $('#fullscreen-btn').on('click', function () {
+        const elem = document.getElementById('flipbook');
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      });
+    });
+  </script>
+
+</body>
+</html>
