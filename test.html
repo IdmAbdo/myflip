@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test Flipbook Simple</title>
+  <link rel="stylesheet" href="libs/dflip.min.css">
+  <script src="libs/jquery.min.js"></script>
+  <script src="libs/three.min.js"></script>
+  <script src="libs/dflip.min.js"></script>
+</head>
+<body>
+  <div id="flipbook"></div>
+  <script>
+    $(function(){
+      $("#flipbook").flipBook({
+        source: "pdf/livre01.pdf"
+      });
+    });
+  </script>
+</body>
+</html>
