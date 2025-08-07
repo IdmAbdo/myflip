@@ -2,19 +2,20 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Test Flipbook CDN</title>
+  <title>Test Flipbook Pur JS</title>
   <link rel="stylesheet" href="https://unpkg.com/dflip@1.7.32/dist/dflip.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://unpkg.com/three@0.92.0/build/three.min.js"></script>
   <script src="https://unpkg.com/dflip@1.7.32/dist/dflip.min.js"></script>
 </head>
 <body>
   <div id="flipbook" style="width:90vw;height:90vh"></div>
   <script>
-    $(function(){
-      $("#flipbook").flipBook({
-        source: "pdf/livre01.pdf"
-      });
+    document.addEventListener("DOMContentLoaded", function(){
+      new DFLIP({
+        source: "pdf/livre01.pdf",
+        webgl: true,
+        duration: 700
+      }).renderTo(document.getElementById("flipbook"));
     });
   </script>
 </body>
