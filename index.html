@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flipbook PDF V4.0</title>
+  <title>Flipbook PDF V4.1</title>
 
   <!-- Favicon (optionnel) -->
   <link rel="icon" href="favicon.ico" />
@@ -18,17 +18,21 @@
       padding: 20px;
       background-color: #f4f4f4;
     }
+
     #pdf-select {
       margin-bottom: 20px;
       padding: 10px;
       font-size: 16px;
     }
+
     #flipbook-container {
       width: 100%;
       height: 80vh;
       border: 1px solid #ccc;
       background: white;
+      position: relative;
     }
+
     #fullscreen-btn {
       position: absolute;
       top: 20px;
@@ -41,18 +45,22 @@
       z-index: 1000;
       border-radius: 4px;
     }
+
     #fullscreen-btn:hover {
       background-color: #0056b3;
+    }
+
+    #error-message {
+      color: red;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
     }
   </style>
 
   <!-- Librairies JS -->
   <script src="libs/jquery.min.js"></script>
-
-  <!-- ✅ Utiliser la version stable de THREE.js depuis CDN -->
   <script src="libs/three.min.js"></script>
-
-  <!-- Script principal DFlip -->
   <script src="libs/dflip.min.js"></script>
 </head>
 
@@ -71,34 +79,44 @@
     <div class="_df_book" id="flipbook"></div>
   </div>
 
+  <div id="error-message">⚠️ Impossible de charger le PDF sélectionné. Veuillez vérifier que le fichier existe bien dans le dossier <code>pdf/</code>.</div>
+
   <script>
     $(document).ready(function () {
       function loadFlipbook(src) {
         if (!src) {
-          console.error("Aucun PDF sélectionné");
+          console.warn("Aucun fichier PDF sélectionné.");
           return;
         }
 
         $("#flipbook").empty();
+        $("#error-message").hide();
 
         const options = {
           source: src,
           webgl: true,
           pageMode: DFLIP.PAGE_MODE.AUTO,
-          singlePageMode: DFLIP.SINGLE_PAGE_MODE.AUTO,
+          singlePageMode: DFLIP.SINGLE_PAGE_MODE.SINGLE, // forcé
           zoomRatio: 1.5,
           scrollWheel: true,
           showDownloadControl: true,
           showPrintControl: true,
           showSearchControl: true,
-          duration: 600
+          duration: 600,
+          backgroundColor: "#ffffff"
         };
 
-        $("#flipbook").flipBook(options);
+        try {
+          $("#flipbook").flipBook(options);
+        } catch (e) {
+          console.error("Erreur lors du chargement du PDF :", e);
+          $("#error-message").show();
+        }
       }
 
       // Chargement initial
-      loadFlipbook($('#pdf-select').val());
+      const initialPDF = $('#pdf-select').val();
+      loadFlipbook(initialPDF);
 
       // Changement de PDF
       $('#pdf-select').on('change', function () {
